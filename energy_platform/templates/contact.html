@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Contact - EnergyAI Platform{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container py-5 mt-5">
+    <div class="text-center py-4">
+      <span class="section-badge">Get In Touch</span>
+      <h1 class="hero-title mt-3"><span class="gradient-text">Contact</span> Us</h1>
+      <p class="text-muted mt-2">Have questions about EnergyAI? We'd love to hear from you.</p>
+    </div>
+  </div>
+</section>
+
+<section class="py-5">
+  <div class="container py-3">
+    <div class="row g-4 justify-content-center">
+
+      <!-- Contact Info -->
+      <div class="col-lg-4">
+        <div class="glass-card p-4 mb-4">
+          <div class="contact-info-item mb-4">
+            <div class="contact-icon"><i class="fas fa-envelope text-success"></i></div>
+            <div>
+              <div class="text-white small fw-bold">Email</div>
+              <div class="text-muted small">keerthana@energyai.com</div>
+            </div>
+          </div>
+          <div class="contact-info-item mb-4">
+            <div class="contact-icon"><i class="fas fa-map-marker-alt text-info"></i></div>
+            <div>
+              <div class="text-white small fw-bold">Location</div>
+              <div class="text-muted small">India</div>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <div class="contact-icon"><i class="fas fa-robot text-warning"></i></div>
+            <div>
+              <div class="text-white small fw-bold">AI Platform</div>
+              <div class="text-muted small">Powered by Groq LLM</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-4">
+          <h6 class="text-success mb-3">Platform Status</h6>
+          <div class="status-item mb-2 d-flex align-items-center gap-2">
+            <span class="status-dot green"></span><span class="text-muted small">AI Engine: Online</span>
+          </div>
+          <div class="status-item mb-2 d-flex align-items-center gap-2">
+            <span class="status-dot green"></span><span class="text-muted small">Groq API: Connected</span>
+          </div>
+          <div class="status-item d-flex align-items-center gap-2">
+            <span class="status-dot yellow"></span><span class="text-muted small">Email Service: Active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="col-lg-6">
+        <div class="glass-card p-4 p-md-5">
+          <h5 class="text-white mb-4">Send a Message</h5>
+          <form id="contactForm">
+            <div class="mb-3">
+              <label class="form-label text-muted small">Your Name</label>
+              <div class="input-group glass-input-group">
+                <span class="input-group-text glass-input-icon"><i class="fas fa-user text-success"></i></span>
+                <input type="text" class="form-control glass-input" placeholder="Keerthana H" required/>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-muted small">Email Address</label>
+              <div class="input-group glass-input-group">
+                <span class="input-group-text glass-input-icon"><i class="fas fa-envelope text-success"></i></span>
+                <input type="email" class="form-control glass-input" placeholder="you@example.com" required/>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label text-muted small">Subject</label>
+              <div class="input-group glass-input-group">
+                <span class="input-group-text glass-input-icon"><i class="fas fa-tag text-success"></i></span>
+                <input type="text" class="form-control glass-input" placeholder="Energy optimization query"/>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label text-muted small">Message</label>
+              <textarea class="form-control glass-input" rows="5"
+                        placeholder="Tell us about your energy optimization needs..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-glow w-100">
+              <i class="fas fa-paper-plane me-2"></i>Send Message
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type=submit]');
+  btn.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+  btn.classList.add('btn-success');
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Send Message';
+    btn.classList.remove('btn-success');
+    btn.disabled = false;
+    this.reset();
+  }, 3000);
+});
+</script>
+{% endblock %}

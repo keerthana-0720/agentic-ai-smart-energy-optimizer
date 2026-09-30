@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+{% block title %}EnergyAI - AI-Powered Energy Optimization Platform{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO SECTION ===== -->
+<section class="hero-section">
+  <!-- Animated background particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="container hero-content">
+    <div class="row align-items-center min-vh-100">
+      <div class="col-lg-6" data-aos="fade-right">
+        <div class="hero-badge mb-3">
+          <span class="badge-dot"></span>
+          <span>AI-Powered &bull; Real-Time &bull; Groq LLM</span>
+        </div>
+        <h1 class="hero-title">
+          Intelligent<br>
+          <span class="gradient-text">Energy</span><br>
+          Optimization
+        </h1>
+        <p class="hero-subtitle mt-3">
+          Harness the power of Groq AI to monitor, predict, and optimize your energy
+          consumption in real-time. Reduce costs, detect anomalies, and get AI-driven
+          recommendations instantly.
+        </p>
+        <div class="hero-stats mt-4 mb-4">
+          <div class="stat-item">
+            <span class="stat-number">40%</span>
+            <span class="stat-label">Energy Saved</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-number">&lt;1s</span>
+            <span class="stat-label">AI Response</span>
+          </div>
+        </div>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{{ url_for('register') }}" class="btn btn-glow btn-lg">
+            <i class="fas fa-rocket me-2"></i>Get Started Free
+          </a>
+          <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg btn-glass">
+            <i class="fas fa-play-circle me-2"></i>Learn More
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mt-5 mt-lg-0" data-aos="fade-left">
+        <div class="hero-dashboard-preview">
+          <div class="preview-card glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="text-success fw-bold"><i class="fas fa-bolt me-2"></i>Live Energy Monitor</span>
+              <span class="badge bg-success pulse-badge">LIVE</span>
+            </div>
+            <!-- Mini chart preview -->
+            <canvas id="heroChart" height="120"></canvas>
+            <div class="row mt-3 g-2">
+              <div class="col-6">
+                <div class="mini-stat-card">
+                  <div class="mini-stat-value text-success">342.5 kWh</div>
+                  <div class="mini-stat-label">Current Usage</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mini-stat-card">
+                  <div class="mini-stat-value text-info">389.2 kWh</div>
+                  <div class="mini-stat-label">Predicted</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mini-stat-card">
+                  <div class="mini-stat-value text-warning">78/100</div>
+                  <div class="mini-stat-label">Savings Score</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="mini-stat-card">
+                  <div class="mini-stat-value text-danger">2 Alerts</div>
+                  <div class="mini-stat-label">Anomalies</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="scroll-dot"></div>
+  </div>
+</section>
+
+<!-- ===== FEATURES SECTION ===== -->
+<section class="features-section py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <span class="section-badge">Platform Features</span>
+      <h2 class="section-title mt-2">Everything You Need for<br><span class="gradient-text">Smart Energy Management</span></h2>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-brain feature-icon text-success"></i>
+          </div>
+          <h5 class="text-white mt-3">Groq AI Predictions</h5>
+          <p class="text-muted">Ultra-fast LLM-powered energy consumption forecasting with sub-second response times using Groq's inference engine.</p>
+          <div class="feature-tag">AI-Powered</div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-exclamation-triangle feature-icon text-warning"></i>
+          </div>
+          <h5 class="text-white mt-3">Anomaly Detection</h5>
+          <p class="text-muted">Real-time detection of unusual energy consumption patterns with instant alerts and root cause analysis.</p>
+          <div class="feature-tag">Real-Time</div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-chart-line feature-icon text-info"></i>
+          </div>
+          <h5 class="text-white mt-3">Advanced Analytics</h5>
+          <p class="text-muted">Interactive dashboards with Chart.js visualizations showing trends, patterns, and sector-wise breakdowns.</p>
+          <div class="feature-tag">Analytics</div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-envelope feature-icon text-primary"></i>
+          </div>
+          <h5 class="text-white mt-3">Automated Email Reports</h5>
+          <p class="text-muted">Automatic email delivery of energy reports with predictions, insights, and recommendations via Gmail SMTP.</p>
+          <div class="feature-tag">Automated</div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-file-pdf feature-icon text-danger"></i>
+          </div>
+          <h5 class="text-white mt-3">PDF Report Export</h5>
+          <p class="text-muted">Download professional PDF reports with energy analytics, AI insights, and optimization recommendations.</p>
+          <div class="feature-tag">Export</div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card glass-card h-100">
+          <div class="feature-icon-wrap">
+            <i class="fas fa-shield-alt feature-icon text-success"></i>
+          </div>
+          <h5 class="text-white mt-3">Secure & Scalable</h5>
+          <p class="text-muted">Session-based authentication, secure user management, and scalable Flask backend architecture.</p>
+          <div class="feature-tag">Secure</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how-section py-5">
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <span class="section-badge">Workflow</span>
+      <h2 class="section-title mt-2">How <span class="gradient-text">EnergyAI</span> Works</h2>
+    </div>
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card text-center">
+          <div class="step-number">01</div>
+          <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+          <h6 class="text-white mt-3">Register & Login</h6>
+          <p class="text-muted small">Create your account and securely log in to the platform.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card text-center">
+          <div class="step-number">02</div>
+          <div class="step-icon"><i class="fas fa-upload"></i></div>
+          <h6 class="text-white mt-3">Input Energy Data</h6>
+          <p class="text-muted small">Enter your energy consumption data into the AI tool.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card text-center">
+          <div class="step-number">03</div>
+          <div class="step-icon"><i class="fas fa-robot"></i></div>
+          <h6 class="text-white mt-3">AI Analysis</h6>
+          <p class="text-muted small">Groq AI processes data and generates predictions & insights.</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card text-center">
+          <div class="step-number">04</div>
+          <div class="step-icon"><i class="fas fa-envelope-open-text"></i></div>
+          <h6 class="text-white mt-3">Get Report</h6>
+          <p class="text-muted small">Receive automated email reports with actionable recommendations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA SECTION ===== -->
+<section class="cta-section py-5">
+  <div class="container py-4">
+    <div class="cta-card glass-card text-center p-5">
+      <div class="cta-glow"></div>
+      <h2 class="text-white mb-3">Ready to Optimize Your Energy?</h2>
+      <p class="text-muted mb-4">Join the AI-powered energy revolution. Start monitoring, predicting, and saving today.</p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="{{ url_for('register') }}" class="btn btn-glow btn-lg">
+          <i class="fas fa-rocket me-2"></i>Start Free Today
+        </a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-success btn-lg">
+          <i class="fas fa-sign-in-alt me-2"></i>Login
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Hero mini chart
+const ctx = document.getElementById('heroChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets: [{
+      label: 'Energy Usage (kWh)',
+      data: [310,295,320,342,318,355,340,328,365,342,380,389],
+      borderColor: '#00ff88',
+      backgroundColor: 'rgba(0,255,136,0.1)',
+      borderWidth: 2,
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: '#00ff88',
+      pointRadius: 3
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888', font: { size: 10 } }, grid: { color: '#ffffff11' } }
+    }
+  }
+});
+
+// Particle animation
+(function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${Math.random()*4+1}px;
+      height:${Math.random()*4+1}px;
+      animation-delay:${Math.random()*6}s;
+      animation-duration:${Math.random()*10+5}s;
+    `;
+    container.appendChild(p);
+  }
+})();
+</script>
+{% endblock %}

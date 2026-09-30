@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}Reports - EnergyAI Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-bolt text-success me-2"></i>
+      <span class="fw-bold text-white">Energy<span class="text-success">AI</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('dashboard') }}" class="sidebar-link"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+      <a href="{{ url_for('energy_tool') }}" class="sidebar-link"><i class="fas fa-robot"></i><span>AI Tool</span></a>
+      <a href="{{ url_for('reports') }}" class="sidebar-link active"><i class="fas fa-chart-bar"></i><span>Reports</span></a>
+      <a href="{{ url_for('profile') }}" class="sidebar-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+      <a href="{{ url_for('logout') }}" class="sidebar-link text-danger"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="status-dot green me-2"></div>
+      <small class="text-muted">AI Engine Online</small>
+    </div>
+  </aside>
+
+  <div class="dashboard-main">
+    <div class="dash-topbar">
+      <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+      <div class="dash-topbar-title">
+        <h5 class="mb-0 text-white"><i class="fas fa-chart-bar text-success me-2"></i>Energy Reports</h5>
+        <small class="text-muted">{{ data.report_date }}</small>
+      </div>
+      <div class="ms-auto d-flex gap-2">
+        <button class="btn btn-sm btn-glow" onclick="sendEmailReport()">
+          <i class="fas fa-envelope me-1"></i>Email Report
+        </button>
+        <a href="{{ url_for('download_pdf') }}" class="btn btn-sm btn-outline-danger">
+          <i class="fas fa-file-pdf me-1"></i>Download PDF
+        </a>
+      </div>
+    </div>
+
+    <div class="dash-content p-4">
+
+      <!-- Summary Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="kpi-card glass-card p-4 text-center">
+            <div class="kpi-value text-success">{{ data.current_usage }}</div>
+            <div class="kpi-label">kWh Used</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="kpi-card glass-card p-4 text-center">
+            <div class="kpi-value text-info">{{ data.predicted_consumption }}</div>
+            <div class="kpi-label">kWh Predicted</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="kpi-card glass-card p-4 text-center">
+            <div class="kpi-value text-warning">{{ data.savings_score }}%</div>
+            <div class="kpi-label">Efficiency Score</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="kpi-card glass-card p-4 text-center">
+            <div class="kpi-value text-danger">{{ data.anomaly_count }}</div>
+            <div class="kpi-label">Anomalies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+          <div class="glass-card p-4">
+            <h6 class="text-white mb-3"><i class="fas fa-chart-area text-success me-2"></i>Annual Energy Trend</h6>
+            <canvas id="annualChart" height="100"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="glass-card p-4">
+            <h6 class="text-white mb-3"><i class="fas fa-chart-pie text-info me-2"></i>Sector Distribution</h6>
+            <canvas id="sectorPie" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+          <div class="glass-card p-4">
+            <h6 class="text-white mb-3"><i class="fas fa-chart-bar text-warning me-2"></i>Weekly Comparison</h6>
+            <canvas id="weeklyCompare" height="140"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="glass-card p-4">
+            <h6 class="text-white mb-3"><i class="fas fa-chart-line text-danger me-2"></i>Anomaly Timeline</h6>
+            <canvas id="anomalyChart" height="140"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Optimization Tips Table -->
+      <div class="glass-card p-4 mb-4">
+        <h6 class="text-white mb-3"><i class="fas fa-lightbulb text-success me-2"></i>AI Optimization Recommendations</h6>
+        <div class="table-responsive">
+          <table class="table table-dark table-hover glass-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Recommendation</th>
+                <th>Impact</th>
+                <th>Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Switch to LED lighting to save up to 15% energy</td>
+                <td><span class="badge bg-success">15% savings</span></td>
+                <td><span class="badge bg-danger">High</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Schedule HVAC during off-peak hours (10PM - 6AM)</td>
+                <td><span class="badge bg-success">12% savings</span></td>
+                <td><span class="badge bg-danger">High</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Enable smart standby mode on idle devices</td>
+                <td><span class="badge bg-info">8% savings</span></td>
+                <td><span class="badge bg-warning text-dark">Medium</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Use solar panels to offset 20% of grid consumption</td>
+                <td><span class="badge bg-success">20% savings</span></td>
+                <td><span class="badge bg-warning text-dark">Medium</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Optimize industrial motor loads during peak hours</td>
+                <td><span class="badge bg-info">6% savings</span></td>
+                <td><span class="badge bg-secondary">Low</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="glass-card p-4">
+        <h6 class="text-white mb-3"><i class="fas fa-brain text-info me-2"></i>AI Insights Summary</h6>
+        <div class="row g-3">
+          {% for insight in data.ai_insights %}
+          <div class="col-md-6">
+            <div class="insight-card glass-card p-3">
+              <i class="fas fa-robot text-info me-2"></i>
+              <span class="text-muted small">{{ insight }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="emailToast" class="toast glass-card text-white" role="alert">
+    <div class="toast-header glass-card border-0">
+      <i class="fas fa-envelope text-success me-2"></i>
+      <strong class="me-auto text-white">Email Report</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="toastMsg">Sending...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Annual trend
+new Chart(document.getElementById('annualChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets: [
+      {
+        label: 'Actual (kWh)',
+        data: [310,295,320,342,318,355,340,328,365,342,380,389],
+        borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.08)',
+        borderWidth: 2, fill: true, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#00ff88'
+      },
+      {
+        label: 'Predicted (kWh)',
+        data: [320,305,330,355,330,365,352,340,375,355,390,400],
+        borderColor: '#00d4ff', borderDash: [5,5],
+        borderWidth: 2, fill: false, tension: 0.4, pointRadius: 4, pointBackgroundColor: '#00d4ff'
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#aaa' } } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } }
+    }
+  }
+});
+
+// Sector pie
+new Chart(document.getElementById('sectorPie'), {
+  type: 'doughnut',
+  data: {
+    labels: ['HVAC','Lighting','Industrial','IT Systems','Others'],
+    datasets: [{
+      data: [35,20,28,10,7],
+      backgroundColor: ['#00ff88','#00d4ff','#ffd700','#ff6b6b','#a855f7'],
+      borderColor: '#0a0a1a', borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { position: 'bottom', labels: { color: '#aaa', font: { size: 11 } } } }
+  }
+});
+
+// Weekly comparison
+new Chart(document.getElementById('weeklyCompare'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets: [
+      { label: 'This Week', data: [48,52,45,61,55,42,38], backgroundColor: 'rgba(0,255,136,0.5)', borderColor: '#00ff88', borderWidth: 1, borderRadius: 4 },
+      { label: 'Last Week', data: [44,48,50,55,52,40,35], backgroundColor: 'rgba(0,212,255,0.3)', borderColor: '#00d4ff', borderWidth: 1, borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#aaa' } } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } }
+    }
+  }
+});
+
+// Anomaly timeline
+new Chart(document.getElementById('anomalyChart'), {
+  type: 'line',
+  data: {
+    labels: ['Week 1','Week 2','Week 3','Week 4','Week 5','Week 6','Week 7','Week 8'],
+    datasets: [{
+      label: 'Anomalies',
+      data: [1,0,2,1,3,0,2,2],
+      borderColor: '#ff4444', backgroundColor: 'rgba(255,68,68,0.1)',
+      borderWidth: 2, fill: true, tension: 0.4,
+      pointBackgroundColor: '#ff4444', pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#aaa' } } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#ffffff11' }, min: 0 }
+    }
+  }
+});
+
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+
+function sendEmailReport() {
+  const toast = new bootstrap.Toast(document.getElementById('emailToast'));
+  document.getElementById('toastMsg').textContent = 'Sending report to your email...';
+  toast.show();
+  fetch('/send-report', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('toastMsg').textContent =
+        data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message;
+    })
+    .catch(() => {
+      document.getElementById('toastMsg').textContent = '❌ Failed. Check SMTP config.';
+    });
+}
+</script>
+{% endblock %}

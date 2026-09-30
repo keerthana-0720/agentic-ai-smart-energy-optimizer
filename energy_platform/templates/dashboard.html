@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - EnergyAI Platform{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <i class="fas fa-bolt text-success me-2"></i>
+      <span class="fw-bold text-white">Energy<span class="text-success">AI</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('dashboard') }}" class="sidebar-link active">
+        <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+      </a>
+      <a href="{{ url_for('energy_tool') }}" class="sidebar-link">
+        <i class="fas fa-robot"></i><span>AI Tool</span>
+      </a>
+      <a href="{{ url_for('reports') }}" class="sidebar-link">
+        <i class="fas fa-chart-bar"></i><span>Reports</span>
+      </a>
+      <a href="{{ url_for('profile') }}" class="sidebar-link">
+        <i class="fas fa-user-circle"></i><span>Profile</span>
+      </a>
+      <a href="{{ url_for('contact') }}" class="sidebar-link">
+        <i class="fas fa-envelope"></i><span>Contact</span>
+      </a>
+      <a href="{{ url_for('logout') }}" class="sidebar-link text-danger">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="status-dot green me-2"></div>
+      <small class="text-muted">AI Engine Online</small>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div class="dashboard-main">
+
+    <!-- Top Bar -->
+    <div class="dash-topbar">
+      <button class="sidebar-toggle" id="sidebarToggle">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="dash-topbar-title">
+        <h5 class="mb-0 text-white">Energy Dashboard</h5>
+        <small class="text-muted" id="liveClock">{{ data.current_time }}</small>
+      </div>
+      <div class="dash-topbar-actions ms-auto d-flex align-items-center gap-3">
+        <div class="notification-bell">
+          <i class="fas fa-bell text-warning"></i>
+          <span class="notif-badge">{{ data.anomaly_count }}</span>
+        </div>
+        <div class="user-chip">
+          <i class="fas fa-user-circle text-success me-2"></i>
+          <span class="text-white small">{{ data.user_name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dash-content p-4">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner glass-card p-4 mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h4 class="text-white mb-1">Welcome back, <span class="text-success">{{ data.user_name }}</span> 👋</h4>
+            <p class="text-muted mb-0">Here's your energy overview for today. AI has detected <span class="text-warning fw-bold">{{ data.anomaly_count }} anomalies</span> requiring attention.</p>
+          </div>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="{{ url_for('energy_tool') }}" class="btn btn-glow">
+              <i class="fas fa-robot me-2"></i>Open AI Tool
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6">
+          <div class="kpi-card glass-card p-4">
+            <div class="kpi-icon-wrap bg-success-subtle">
+              <i class="fas fa-bolt text-success"></i>
+            </div>
+            <div class="kpi-value text-success">{{ data.current_usage }} <small>kWh</small></div>
+            <div class="kpi-label">Current Usage</div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up me-1"></i>+4.2% vs last week</div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="kpi-card glass-card p-4">
+            <div class="kpi-icon-wrap bg-info-subtle">
+              <i class="fas fa-chart-line text-info"></i>
+            </div>
+            <div class="kpi-value text-info">{{ data.predicted_consumption }} <small>kWh</small></div>
+            <div class="kpi-label">Predicted Consumption</div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up me-1"></i>+13.6% predicted</div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="kpi-card glass-card p-4">
+            <div class="kpi-icon-wrap bg-warning-subtle">
+              <i class="fas fa-star text-warning"></i>
+            </div>
+            <div class="kpi-value text-warning">{{ data.savings_score }}<small>/100</small></div>
+            <div class="kpi-label">Energy Saving Score</div>
+            <div class="progress mt-2" style="height:4px;">
+              <div class="progress-bar bg-warning" style="width:{{ data.savings_score }}%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="kpi-card glass-card p-4">
+            <div class="kpi-icon-wrap bg-danger-subtle">
+              <i class="fas fa-exclamation-triangle text-danger"></i>
+            </div>
+            <div class="kpi-value text-danger">{{ data.anomaly_count }}</div>
+            <div class="kpi-label">Anomaly Alerts</div>
+            <div class="kpi-trend down"><i class="fas fa-exclamation-circle me-1"></i>Requires attention</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+          <div class="glass-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="text-white mb-0"><i class="fas fa-chart-area text-success me-2"></i>Monthly Energy Consumption</h6>
+              <span class="badge bg-success">2024</span>
+            </div>
+            <canvas id="monthlyChart" height="100"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="glass-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="text-white mb-0"><i class="fas fa-chart-pie text-info me-2"></i>Sector Breakdown</h6>
+            </div>
+            <canvas id="sectorChart" height="180"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly + Optimization Tips -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-5">
+          <div class="glass-card p-4 h-100">
+            <h6 class="text-white mb-3"><i class="fas fa-calendar-week text-warning me-2"></i>Weekly Usage</h6>
+            <canvas id="weeklyChart" height="140"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-7">
+          <div class="glass-card p-4 h-100">
+            <h6 class="text-white mb-3"><i class="fas fa-lightbulb text-success me-2"></i>AI Optimization Tips</h6>
+            <div class="tips-list">
+              {% for tip in data.optimization_tips %}
+              <div class="tip-item">
+                <div class="tip-icon"><i class="fas fa-check-circle text-success"></i></div>
+                <div class="tip-text text-muted small">{{ tip }}</div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insights + Recent Activity -->
+      <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h6 class="text-white mb-3"><i class="fas fa-brain text-info me-2"></i>AI Insights</h6>
+            {% for insight in data.ai_insights %}
+            <div class="insight-item mb-3">
+              <div class="d-flex align-items-start gap-2">
+                <div class="insight-dot"></div>
+                <p class="text-muted small mb-0">{{ insight }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="glass-card p-4 h-100">
+            <h6 class="text-white mb-3"><i class="fas fa-history text-warning me-2"></i>Recent Activity</h6>
+            {% for activity in data.recent_activity %}
+            <div class="activity-item d-flex align-items-center gap-3 mb-3">
+              <div class="activity-icon
+                {% if activity.type == 'alert' %}bg-danger-subtle text-danger
+                {% elif activity.type == 'success' %}bg-success-subtle text-success
+                {% else %}bg-info-subtle text-info{% endif %}">
+                <i class="fas fa-{% if activity.type == 'alert' %}exclamation{% elif activity.type == 'success' %}check{% else %}info{% endif %}"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div class="text-white small">{{ activity.event }}</div>
+                <div class="text-muted" style="font-size:11px;">{{ activity.time }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="row g-3">
+        <div class="col-12">
+          <div class="glass-card p-4">
+            <h6 class="text-white mb-3"><i class="fas fa-tools text-success me-2"></i>Quick Actions</h6>
+            <div class="d-flex gap-3 flex-wrap">
+              <button class="btn btn-glow" onclick="sendEmailReport()">
+                <i class="fas fa-envelope me-2"></i>Send Email Report
+              </button>
+              <a href="{{ url_for('download_pdf') }}" class="btn btn-outline-danger">
+                <i class="fas fa-file-pdf me-2"></i>Download PDF
+              </a>
+              <a href="{{ url_for('energy_tool') }}" class="btn btn-outline-info">
+                <i class="fas fa-robot me-2"></i>Open AI Tool
+              </a>
+              <a href="{{ url_for('reports') }}" class="btn btn-outline-warning">
+                <i class="fas fa-chart-bar me-2"></i>Full Reports
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dash-content -->
+  </div><!-- /dashboard-main -->
+</div><!-- /dashboard-wrapper -->
+
+<!-- Email sending toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+  <div id="emailToast" class="toast glass-card text-white" role="alert">
+    <div class="toast-header glass-card border-0">
+      <i class="fas fa-envelope text-success me-2"></i>
+      <strong class="me-auto text-white">Email Report</strong>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="toastMsg">Sending report...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Monthly chart
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets: [
+      {
+        label: 'Actual (kWh)',
+        data: [310,295,320,342,318,355,340,328,365,342,380,389],
+        borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.08)',
+        borderWidth: 2, fill: true, tension: 0.4, pointBackgroundColor: '#00ff88', pointRadius: 4
+      },
+      {
+        label: 'Predicted (kWh)',
+        data: [320,305,330,355,330,365,352,340,375,355,390,400],
+        borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.05)',
+        borderWidth: 2, borderDash: [5,5], fill: false, tension: 0.4,
+        pointBackgroundColor: '#00d4ff', pointRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#aaa' } } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } }
+    }
+  }
+});
+
+// Sector pie chart
+new Chart(document.getElementById('sectorChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['HVAC','Lighting','Industrial','IT Systems','Others'],
+    datasets: [{
+      data: [35,20,28,10,7],
+      backgroundColor: ['#00ff88','#00d4ff','#ffd700','#ff6b6b','#a855f7'],
+      borderColor: '#0a0a1a', borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { color: '#aaa', padding: 10, font: { size: 11 } } }
+    }
+  }
+});
+
+// Weekly bar chart
+new Chart(document.getElementById('weeklyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    datasets: [{
+      label: 'kWh',
+      data: [48,52,45,61,55,42,38],
+      backgroundColor: ['#00ff8844','#00ff8844','#00ff8844','#ff444488','#00ff8844','#00ff8844','#00ff8844'],
+      borderColor: ['#00ff88','#00ff88','#00ff88','#ff4444','#00ff88','#00ff88','#00ff88'],
+      borderWidth: 2, borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } },
+      y: { ticks: { color: '#888' }, grid: { color: '#ffffff11' } }
+    }
+  }
+});
+
+// Live clock
+function updateClock() {
+  const now = new Date();
+  document.getElementById('liveClock').textContent =
+    now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) +
+    '  ' + now.toLocaleTimeString('en-US');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Send email report
+function sendEmailReport() {
+  const toast = new bootstrap.Toast(document.getElementById('emailToast'));
+  document.getElementById('toastMsg').textContent = 'Sending report to your email...';
+  toast.show();
+  fetch('/send-report', { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('toastMsg').textContent =
+        data.status === 'success' ? '✅ ' + data.message : '❌ ' + data.message;
+    })
+    .catch(() => {
+      document.getElementById('toastMsg').textContent = '❌ Failed to send. Check SMTP config.';
+    });
+}
+
+// Sidebar toggle
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+});
+</script>
+{% endblock %}
